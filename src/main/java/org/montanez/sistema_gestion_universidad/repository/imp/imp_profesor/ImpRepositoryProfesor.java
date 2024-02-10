@@ -22,7 +22,7 @@ public class ImpRepositoryProfesor implements RepositoryProfesor {
         this.connection = ConexionMsql.getInstance().getConnection();
     }
 
-    
+
     @Override
     public List<Profesor> listar() {
         List<Profesor> profesores = new ArrayList<>();
@@ -73,8 +73,8 @@ public class ImpRepositoryProfesor implements RepositoryProfesor {
         try {
             preparedStatement.setString(1, profesor.getTipoDocumento().name());
             preparedStatement.setString(2, profesor.getNumeroDocumento());
-            preparedStatement.setString(3, profesor.getPrimerNombre());
-            preparedStatement.setString(4, profesor.getPrimerApellido());
+            preparedStatement.setString(3, profesor.getNombre());
+            preparedStatement.setString(4, profesor.getApellido());
             preparedStatement.setString(5, profesor.getCiudad());
             preparedStatement.setString(6, profesor.getDireccion());
             preparedStatement.setString(7, profesor.getTelefono());
@@ -90,8 +90,8 @@ public class ImpRepositoryProfesor implements RepositoryProfesor {
         profesor.setId(resultSet.getLong("id"));
         profesor.setTipoDocumento(TipoDocumento.setEnumTipo(resultSet.getString("tipoDocumento")));
         profesor.setNumeroDocumento(resultSet.getString("numeroDocumento"));
-        profesor.setPrimerNombre(resultSet.getString("nombres"));
-        profesor.setPrimerApellido(resultSet.getString("apellidos"));
+        profesor.setNombre(resultSet.getString("nombres"));
+        profesor.setApellido(resultSet.getString("apellidos"));
         profesor.setCiudad(resultSet.getString("ciudadResidencia"));
         profesor.setDireccion(resultSet.getString("direccion"));
         profesor.setTelefono(resultSet.getString("numeroTelefono"));

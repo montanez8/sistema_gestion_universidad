@@ -7,6 +7,7 @@ import java.util.List;
 public interface RepositoryAlumno {
     List<Alumno> listar();
 
+
     Alumno alumno_id(long id);
 
     void crear(Alumno alumno);

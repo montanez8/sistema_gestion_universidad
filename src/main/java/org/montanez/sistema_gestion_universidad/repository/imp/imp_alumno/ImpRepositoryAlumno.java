@@ -23,7 +23,7 @@ public class ImpRepositoryAlumno implements RepositoryAlumno {
     public static void main(String[] args) {
         try {
             ImpRepositoryAlumno impRepositoryAlumno = new ImpRepositoryAlumno();
-            impRepositoryAlumno.listar().forEach(System.out::println);
+            impRepositoryAlumno.crear(new Alumno(TipoDocumento.CEDULA, "123456789", "Juan", "Perez", "Bogota", "Calle 123", "1234567", null, "M"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,8 +76,8 @@ public class ImpRepositoryAlumno implements RepositoryAlumno {
         alumno.setId(resultSet.getLong("id"));
         alumno.setTipoDocumento(TipoDocumento.setEnumTipo(resultSet.getString("tipoDocumento")));
         alumno.setNumeroDocumento(resultSet.getString("numeroDocumento"));
-        alumno.setPrimerNombre(resultSet.getString("nombres"));
-        alumno.setPrimerApellido(resultSet.getString("apellidos"));
+        alumno.setNombre(resultSet.getString("nombres"));
+        alumno.setApellido(resultSet.getString("apellidos"));
         alumno.setCiudad(resultSet.getString("ciudadResidencia"));
         alumno.setDireccion(resultSet.getString("direccion"));
         alumno.setTelefono(resultSet.getString("numeroTelefono"));
@@ -91,12 +91,13 @@ public class ImpRepositoryAlumno implements RepositoryAlumno {
     private void setPreparedStatementForAlumno(PreparedStatement preparedStatement, Alumno alumno) throws SQLException {
         preparedStatement.setString(1, alumno.getTipoDocumento().name());
         preparedStatement.setString(2, alumno.getNumeroDocumento());
-        preparedStatement.setString(3, alumno.getPrimerNombre());
-        preparedStatement.setString(4, alumno.getPrimerApellido());
+        preparedStatement.setString(3, alumno.getNombre());
+        preparedStatement.setString(4, alumno.getApellido());
         preparedStatement.setString(5, alumno.getCiudad());
         preparedStatement.setString(6, alumno.getDireccion());
         preparedStatement.setString(7, alumno.getTelefono());
-        preparedStatement.setDate(8, java.sql.Date.valueOf(String.valueOf(alumno.getFechaNacimiento())));
+        java.sql.Date sqlFechaNacimiento = new java.sql.Date(alumno.getFechaNacimiento().getTime());
+        preparedStatement.setDate(8, sqlFechaNacimiento);
         preparedStatement.setString(9, alumno.getGenero());
     }
 
