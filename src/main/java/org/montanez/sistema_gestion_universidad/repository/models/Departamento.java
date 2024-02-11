@@ -25,7 +25,7 @@ public class Departamento {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Nombre: ").append(nombre).append("\n");
+        sb.append("id: ").append(id).append(" Nombre: ").append(nombre);
         return sb.toString();
     }
 }

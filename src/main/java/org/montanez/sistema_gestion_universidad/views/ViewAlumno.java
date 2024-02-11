@@ -7,38 +7,22 @@ import org.montanez.sistema_gestion_universidad.repository.models.TipoDocumento;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Function;
 
 public class ViewAlumno extends ViewMain {
     public static void startMenu() throws ExepcionesNullExeption {
-
-        int op = 0;
-
+        int op;
         do {
-
             op = mostrarMenu();
             switch (op) {
-                case 1:
-                    crearAlumno();
-                    break;
-                case 2:
-                    listarAlumnos();
-                    break;
-                case 3:
-                    buscarAlumno();
-                    break;
-                case 4:
-                    modificarAlumno();
-                    break;
-                case 5:
-                    eliminarAlumno();
-                    break;
-                default:
-                    System.out.println("Opcion no valida");
-                    break;
+                case 1 -> crearAlumno();
+                case 2 -> listarAlumnos();
+                case 3 -> buscarAlumno();
+                case 4 -> modificarAlumno();
+                case 5 -> eliminarAlumno();
+                default -> System.out.println("Opcion no valida");
             }
-
-        } while (op >= 1 && op < 6);
-
+        } while (op >= 1 && op <= 5);
     }
 
     private static void eliminarAlumno() throws ExepcionesNullExeption {
@@ -102,70 +86,59 @@ public class ViewAlumno extends ViewMain {
         Alumno alumno = serviceAlumno.alumno_id(id);
         if (alumno != null) {
             leer.nextLine();
-            System.out.println("Desea modificar el tipo de documento? (s/n)");
-            if (leer.nextLine().equalsIgnoreCase("s")) {
-                System.out.println("Seleccione el nuevo tipo de documento:");
-                int i = 1;
-                for (TipoDocumento tipo : TipoDocumento.values()) {
-                    System.out.println(i++ + ". " + tipo);
-                }
-                int seleccion = leer.nextInt();
-                alumno.setTipoDocumento(TipoDocumento.values()[seleccion - 1]);
-            }
-            System.out.println("Desea modificar el numero de documento? (s/n)");
-            if (leer.nextLine().equalsIgnoreCase("s")) {
-                System.out.println("Ingrese el nuevo numero de documento:");
-                alumno.setNumeroDocumento(leer.nextLine());
-            }
-            System.out.println("Desea modificar el nombre? (s/n)");
-            if (leer.nextLine().equalsIgnoreCase("s")) {
-                System.out.println("Ingrese el nuevo nombre:");
-                alumno.setNombre(leer.nextLine());
-            }
-            System.out.println("Desea modificar el apellido? (s/n)");
-            if (leer.nextLine().equalsIgnoreCase("s")) {
-                System.out.println("Ingrese el nuevo apellido:");
-                alumno.setApellido(leer.nextLine());
-            }
-            System.out.println("Desea modificar la ciudad? (s/n)");
-            if (leer.nextLine().equalsIgnoreCase("s")) {
-                System.out.println("Ingrese la nueva ciudad:");
-                alumno.setCiudad(leer.nextLine());
-            }
-            System.out.println("Desea modificar la direccion? (s/n)");
-            if (leer.nextLine().equalsIgnoreCase("s")) {
-                System.out.println("Ingrese la nueva direccion:");
-                alumno.setDireccion(leer.nextLine());
-            }
-            System.out.println("Desea modificar el telefono? (s/n)");
-            if (leer.nextLine().equalsIgnoreCase("s")) {
-                System.out.println("Ingrese el nuevo telefono:");
-                alumno.setTelefono(leer.nextLine());
-            }
-            System.out.println("Desea modificar la fecha de nacimiento? (s/n)");
-            if (leer.nextLine().equalsIgnoreCase("s")) {
-                System.out.println("Ingrese la nueva fecha de nacimiento (dd-MM-yyyy):");
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-                Date fechaNacimiento = null;
+            alumno.setTipoDocumento(obtenerNuevoValor("tipo de documento", alumno.getTipoDocumento()));
+            alumno.setNumeroDocumento(obtenerNuevoValor("numero de documento", alumno.getNumeroDocumento(), Function.identity()));
+            alumno.setNombre(obtenerNuevoValor("nombre", alumno.getNombre(), Function.identity()));
+            alumno.setApellido(obtenerNuevoValor("apellido", alumno.getApellido(), Function.identity()));
+            alumno.setCiudad(obtenerNuevoValor("ciudad", alumno.getCiudad(), Function.identity()));
+            alumno.setDireccion(obtenerNuevoValor("direccion", alumno.getDireccion(), Function.identity()));
+            alumno.setTelefono(obtenerNuevoValor("telefono", alumno.getTelefono(), Function.identity()));
+            alumno.setFechaNacimiento(obtenerNuevoValor("fecha de nacimiento(dd-MM-yyyy) ", alumno.getFechaNacimiento(), str -> {
                 try {
-                    fechaNacimiento = formatter.parse(leer.nextLine());
+                    return new SimpleDateFormat("dd-MM-yyyy").parse(str);
                 } catch (ParseException e) {
-                    System.out.println("Formato de fecha incorrecto");
+                    throw new RuntimeException(e);
                 }
-                alumno.setFechaNacimiento(fechaNacimiento);
-            }
-
-            System.out.println("Desea modificar el genero? (s/n)");
-            if (leer.nextLine().equalsIgnoreCase("s")) {
-                System.out.println("Ingrese el nuevo genero:");
-                alumno.setGenero(leer.nextLine());
-            }
-
+            }));
+            alumno.setGenero(obtenerNuevoValor("genero", alumno.getGenero(), Function.identity()));
             serviceAlumno.editar(alumno);
             System.out.println("Alumno modificado exitosamente.");
         } else {
             System.out.println("Alumno no encontrado.");
         }
+    }
+
+    private static String obtenerNuevoValor(String campo, String valorAntiguo, Function<String, String> converter) {
+        System.out.println("Desea modificar el " + campo + "? (s/n)");
+        if (leer.nextLine().equalsIgnoreCase("s")) {
+            System.out.println("Ingrese el nuevo " + campo + ":");
+            return converter.apply(leer.nextLine());
+        }
+        return valorAntiguo;
+    }
+
+    private static TipoDocumento obtenerNuevoValor(String campo, TipoDocumento valorAntiguo) {
+        System.out.println("Desea modificar el " + campo + "? (s/n)");
+        if (leer.nextLine().equalsIgnoreCase("s")) {
+            System.out.println("Seleccione el nuevo " + campo + ":");
+            int i = 1;
+            for (TipoDocumento tipo : TipoDocumento.values()) {
+                System.out.println(i++ + ". " + tipo);
+            }
+            int seleccion = leer.nextInt();
+            return TipoDocumento.values()[seleccion - 1];
+        }
+        return valorAntiguo;
+    }
+
+    private static <T> T obtenerNuevoValor(String field, T ValorAntiguo, Function<String, T> convertir) {
+        System.out.println("Desea modificar el " + field + "? (s/n)");
+        if (leer.nextLine().equalsIgnoreCase("s")) {
+            System.out.println("Ingrese el nuevo " + field + ":");
+            return convertir.apply(leer.nextLine());
+        }
+
+        return ValorAntiguo;
     }
 
     private static void buscarAlumno() throws ExepcionesNullExeption {

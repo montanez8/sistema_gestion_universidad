@@ -18,12 +18,14 @@ public class Programa {
 
     @Override
     public String toString() {
+        String reset = "\u001B[0m";
+        String red = "\u001B[31m";
+        String green = "\u001B[32m";
+
         StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        sb.append("Programa{id=").append(id);
-        sb.append(", nombre=").append(nombre);
-        sb.append(", nivel=").append(nivel);
-        sb.append('}');
+        sb.append(red).append(" Programa id: ").append(reset).append(id);
+        sb.append(green).append(" Nombre: ").append(reset).append(nombre);
+        sb.append(green).append(" Nivel: ").append(reset).append(nivel);
         return sb.toString();
     }
 }
