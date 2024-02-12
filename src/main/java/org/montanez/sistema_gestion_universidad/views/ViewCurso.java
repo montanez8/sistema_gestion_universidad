@@ -47,8 +47,8 @@ public class ViewCurso extends ViewMain {
         Curso curso = serviceCurso.curso_id(id);
         if (curso != null) {
             leer.nextLine();
-            curso.setNombre(getNewValue("nombre del curso", curso.getNombre()));
-            curso.setGuiaCatedra(getNewValue("guia de catedra", curso.getGuiaCatedra()));
+            curso.setNombre(obtenerValor("nombre del curso", curso.getNombre()));
+            curso.setGuiaCatedra(obtenerValor("guia de catedra", curso.getGuiaCatedra()));
             serviceCurso.editar(curso);
             System.out.println("Curso modificado");
         } else {
@@ -56,7 +56,7 @@ public class ViewCurso extends ViewMain {
         }
     }
 
-    private static String getNewValue(String nombreCampo, String valorAnterior) {
+    private static String obtenerValor(String nombreCampo, String valorAnterior) {
         System.out.println("Desea modificar el " + nombreCampo + "? (s/n)");
         if (leer.nextLine().equalsIgnoreCase("s")) {
             System.out.println("Ingrese el nuevo " + nombreCampo);

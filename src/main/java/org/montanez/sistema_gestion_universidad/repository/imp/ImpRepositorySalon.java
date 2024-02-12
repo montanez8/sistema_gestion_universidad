@@ -1,6 +1,7 @@
 package org.montanez.sistema_gestion_universidad.repository.imp;
 
 import org.montanez.sistema_gestion_universidad.repository.RepositorySalon;
+import org.montanez.sistema_gestion_universidad.repository.models.Edificio;
 import org.montanez.sistema_gestion_universidad.repository.models.Salon;
 import org.montanez.sistema_gestion_universidad.utils.conexionesbd.mysql.ConexionMsql;
 import org.montanez.sistema_gestion_universidad.utils.conexionesbd.mysql.DbUtilsSql;
@@ -15,17 +16,21 @@ public class ImpRepositorySalon implements RepositorySalon {
     private Connection connection;
 
     public ImpRepositorySalon() throws Exception {
-        this.connection = ConexionMsql.getInstance().getConnection();
+        this.connection = new ConexionMsql().getConnection();
     }
 
     public static void main(String[] args) {
         try {
             ImpRepositorySalon impRepositorySalon = new ImpRepositorySalon();
-            impRepositorySalon.listar().forEach(System.out::println);
+            List<Salon> salones = impRepositorySalon.listar();
+            for (Salon salon : salones) {
+                System.out.println(salon);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public List<Salon> listar() {
@@ -45,9 +50,8 @@ public class ImpRepositorySalon implements RepositorySalon {
 
     @Override
     public void crear(Salon salon) {
-        String sql = "INSERT INTO Salon (capacidad, piso, numeroIdentificacion,edificio) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Salon (capacidad, piso, numeroIdentificacion, edificio_id) VALUES (?, ?, ?, ?)";
         DbUtilsSql.executeUpdate(connection, sql, preparedStatement -> setPreparedStatementForSalon(preparedStatement, salon));
-
     }
 
     @Override
@@ -72,9 +76,9 @@ public class ImpRepositorySalon implements RepositorySalon {
             preparedStatement.setInt(1, salon.getCapacidad());
             preparedStatement.setInt(2, salon.getPiso());
             preparedStatement.setString(3, salon.getNumero());
-            preparedStatement.setString(4, salon.getEdificio());
+            preparedStatement.setLong(4, salon.getEdificio().getId());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -85,9 +89,13 @@ public class ImpRepositorySalon implements RepositorySalon {
             salon.setCapacidad(resultSet.getInt("capacidad"));
             salon.setPiso(resultSet.getInt("piso"));
             salon.setNumero(resultSet.getString("numeroIdentificacion"));
-            salon.setEdificio(resultSet.getString("edificio"));
+
+            long edificioId = resultSet.getLong("edificio_id");
+            ImpRepositoryEdificio impRepositoryEdificio = new ImpRepositoryEdificio();
+            Edificio edificio = impRepositoryEdificio.edificio_id(edificioId);
+            salon.setEdificio(edificio);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return salon;
     }

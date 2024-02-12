@@ -15,7 +15,7 @@ public class ImpRepositoryPeriodo implements RepositoryPeriodo {
     private Connection connection;
 
     public ImpRepositoryPeriodo() throws Exception {
-        this.connection = ConexionMsql.getInstance().getConnection();
+        this.connection = new ConexionMsql().getConnection();
     }
 
     @Override
@@ -36,17 +36,17 @@ public class ImpRepositoryPeriodo implements RepositoryPeriodo {
 
     @Override
     public void crear(Periodo periodo) {
-        String sql = "INSERT INTO Periodo (codigo, anio, semestre) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Periodo (anio, semestre) VALUES ( ?, ?)";
         DbUtilsSql.executeUpdate(connection, sql, preparedStatement -> setPreparedStatementForPeriodo(preparedStatement, periodo));
 
     }
 
     @Override
     public void editar(Periodo periodo) {
-        String sql = "UPDATE Periodo SET codigo = ?, anio = ?, semestre = ? WHERE id = ?";
+        String sql = "UPDATE Periodo SET anio = ?, semestre = ? WHERE id = ?";
         DbUtilsSql.executeUpdate(connection, sql, preparedStatement -> {
             setPreparedStatementForPeriodo(preparedStatement, periodo);
-            preparedStatement.setLong(4, periodo.getId());
+            preparedStatement.setLong(3, periodo.getId());
         });
 
     }
@@ -58,11 +58,10 @@ public class ImpRepositoryPeriodo implements RepositoryPeriodo {
 
     private void setPreparedStatementForPeriodo(PreparedStatement preparedStatement, Periodo periodo) {
         try {
-            preparedStatement.setString(1, periodo.getCodigo());
-            preparedStatement.setInt(2, periodo.getAnio());
-            preparedStatement.setInt(3, periodo.getSemestre());
+            preparedStatement.setInt(1, periodo.getAnio());
+            preparedStatement.setInt(2, periodo.getSemestre());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -74,7 +73,7 @@ public class ImpRepositoryPeriodo implements RepositoryPeriodo {
             periodo.setAnio(resultSet.getInt("anio"));
             periodo.setSemestre(resultSet.getInt("semestre"));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
         return periodo;
 

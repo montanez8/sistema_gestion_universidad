@@ -13,22 +13,15 @@ public class ConexionMsql {
     private static String USERNAME = Configuracion.obtenerPropiedad("db.username");
     private static String PASSWORD = Configuracion.obtenerPropiedad("db.password");
 
-    private static ConexionMsql instance;
     private HikariDataSource dataSource;
 
-    private ConexionMsql() {
+    public ConexionMsql() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
+        config.setMaximumPoolSize(2);
         this.dataSource = new HikariDataSource(config);
-    }
-
-    public static ConexionMsql getInstance() {
-        if (instance == null) {
-            instance = new ConexionMsql();
-        }
-        return instance;
     }
 
     public Connection getConnection() throws SQLException {

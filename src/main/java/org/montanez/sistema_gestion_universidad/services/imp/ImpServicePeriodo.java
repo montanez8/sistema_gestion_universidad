@@ -22,7 +22,12 @@ public class ImpServicePeriodo implements ServicePeriodo {
     public Periodo buscarId(long id) {
         Periodo periodo = this.repositoryPeriodo.buscarId(id);
         if (periodo == null) {
-            throw new RuntimeException("El periodo no existe");
+            try {
+                throw new RuntimeException("El periodo no existe");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+
+            }
         }
         return periodo;
     }

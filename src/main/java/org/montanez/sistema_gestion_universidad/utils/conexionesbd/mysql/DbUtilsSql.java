@@ -17,7 +17,7 @@ public class DbUtilsSql {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -27,7 +27,7 @@ public class DbUtilsSql {
             preparedStatementConsumer.accept(preparedStatement);
             preparedStatement.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 

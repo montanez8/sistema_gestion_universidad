@@ -16,7 +16,7 @@ public class ImpRepositoryTarifa implements RepositoryTarifa {
     private Connection connection;
 
     public ImpRepositoryTarifa() throws Exception {
-        this.connection = ConexionMsql.getInstance().getConnection();
+        this.connection = new ConexionMsql().getConnection();
     }
 
     @Override
@@ -42,8 +42,9 @@ public class ImpRepositoryTarifa implements RepositoryTarifa {
 
             return tarifa;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
+        return tarifa;
     }
 
     @Override

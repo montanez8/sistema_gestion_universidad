@@ -22,7 +22,12 @@ public class ImpServiceDepartamento implements ServiceDepartemento {
     public Departamento buscarId(long id) {
         Departamento departamento = this.repositoryDepartamento.buscarId(id);
         if (departamento == null) {
-            throw new RuntimeException("El departamento no existe");
+            try {
+                throw new RuntimeException("El departamento no existe");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+
+            }
         }
         return departamento;
     }

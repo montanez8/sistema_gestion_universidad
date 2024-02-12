@@ -22,7 +22,11 @@ public class ImpServiceTarifa implements ServiceTarifa {
     public Tarifa buscarId(long id) {
         Tarifa tarifa = this.repositoryTarifa.buscarId(id);
         if (tarifa == null) {
-            throw new RuntimeException("La tarifa no existe");
+            try {
+                throw new RuntimeException("La tarifa no existe");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
         }
         return tarifa;
     }

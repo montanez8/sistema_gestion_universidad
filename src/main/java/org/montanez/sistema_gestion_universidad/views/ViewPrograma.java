@@ -69,7 +69,6 @@ public class ViewPrograma extends ViewMain {
     }
 
     private static void buscarPrograma() {
-        listarPrograma();
         System.out.println("Ingrese el id del programa");
         long id = leer.nextLong();
         Programa programa = servicePrograma.programa_id(id);

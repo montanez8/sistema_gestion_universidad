@@ -1,6 +1,8 @@
 package org.montanez.sistema_gestion_universidad.views;
 
 import org.montanez.sistema_gestion_universidad.exepciones.ExepcionesNullExeption;
+import org.montanez.sistema_gestion_universidad.repository.models.Periodo;
+
 
 public class ViewPeriodo extends ViewMain {
     public static void startMenu() throws ExepcionesNullExeption {
@@ -26,19 +28,61 @@ public class ViewPeriodo extends ViewMain {
     }
 
     private static void modificarPeriodo() {
-        //todo
+        System.out.println("Modificar Periodo");
+        listarPeriodo();
+        System.out.println("Ingrese el id del periodo");
+        long id = leer.nextLong();
+        Periodo periodo = servicePeriodo.buscarId(id);
+        if (periodo != null) {
+            leer.nextLine();
+            periodo.setAnio(obtenerValor("año del periodo", periodo.getAnio()));
+            periodo.setSemestre(obtenerValor("semestre del periodo", periodo.getSemestre()));
+            servicePeriodo.editar(periodo);
+            System.out.println("Periodo modificado");
+        } else {
+            System.out.println("Periodo no encontrado");
+        }
+
+    }
+
+    private static int obtenerValor(String añoDelPeriodo, int anio) {
+        System.out.println("Desea modificar el " + añoDelPeriodo + "? (s/n)");
+        String confirm = leer.next();
+        if (confirm.equalsIgnoreCase("s")) {
+            System.out.println("Ingrese el nuevo " + añoDelPeriodo);
+            return leer.nextInt();
+        }
+        return anio;
     }
 
     private static void buscarPeriodo() {
-        //todo
+        System.out.println("Buscar Periodo");
+        System.out.println("Ingrese el id del periodo");
+        long id = leer.nextLong();
+        Periodo periodo = servicePeriodo.buscarId(id);
+        if (periodo != null) {
+            System.out.println(periodo);
+        } else {
+            System.out.println("Periodo no encontrado");
+        }
+
     }
 
     private static void listarPeriodo() {
-        //todo
+        System.out.println("Listar Periodo");
+        for (Periodo periodo : servicePeriodo.listar()) {
+            System.out.println(periodo);
+        }
     }
 
     private static void crearPeriodo() {
-        //todo
+        System.out.println("Crear Periodo");
+        System.out.println("Ingrese el año");
+        int anio = leer.nextInt();
+        System.out.println("Ingrese el semestre");
+        int semestre = leer.nextInt();
+        Periodo periodo = new Periodo(anio, semestre);
+        servicePeriodo.crear(periodo);
 
     }
 

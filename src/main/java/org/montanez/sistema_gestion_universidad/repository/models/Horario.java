@@ -13,9 +13,7 @@ public class Horario {
     private DayOfWeek dia;
     private LocalTime horaInicio;
     private LocalTime horaFin;
-    private Asignatura asignatura;
-    private Salon salon;
-    private Periodo periodo;
+
 
     public Horario(DayOfWeek dia, LocalTime horaInicio, LocalTime horaFin) {
         this.dia = dia;
@@ -26,16 +24,14 @@ public class Horario {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        sb.append("Horario{id=").append(id);
-        sb.append(", dia=").append(dia);
-        sb.append(", horaInicio=").append(horaInicio);
-        sb.append(", horaFin=").append(horaFin);
-        sb.append(", asignatura=").append(asignatura);
-        sb.append(", salon=").append(salon);
-        sb.append(", periodo=").append(periodo);
-        sb.append('}');
-        return sb.toString();
+        String reset = "\u001B[0m";
+        String red = "\u001B[31m";
+        String green = "\u001B[32m";
+        sb.append(red + "Id: " + reset).append(id).append(" | ");
+        sb.append(green + "Dia: " + reset).append(dia).append(" | ");
+        sb.append(green + "Hora de inicio: " + reset).append(horaInicio).append(" | ");
+        sb.append(green + "Hora de fin: " + reset).append(horaFin);
 
+        return sb.toString();
     }
 }

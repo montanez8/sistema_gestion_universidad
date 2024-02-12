@@ -15,7 +15,7 @@ public class ImpRepositoryDepartamento implements RepositoryDepartemento {
 
     public ImpRepositoryDepartamento() {
         try {
-            this.connection = ConexionMsql.getInstance().getConnection();
+            this.connection = new ConexionMsql().getConnection();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -37,7 +37,7 @@ public class ImpRepositoryDepartamento implements RepositoryDepartemento {
                 departamentos.add(createDepartamentoFromResultSet(resultSet));
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
         return departamentos;
     }
@@ -52,7 +52,7 @@ public class ImpRepositoryDepartamento implements RepositoryDepartemento {
                 departamento = createDepartamentoFromResultSet(resultSet);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
         return departamento;
     }
@@ -63,7 +63,7 @@ public class ImpRepositoryDepartamento implements RepositoryDepartemento {
             preparedStatement.setString(1, departamento.getNombre());
             preparedStatement.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -74,7 +74,7 @@ public class ImpRepositoryDepartamento implements RepositoryDepartemento {
             preparedStatement.setLong(2, departamento.getId());
             preparedStatement.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ public class ImpRepositoryDepartamento implements RepositoryDepartemento {
             preparedStatement.setLong(1, departamento.getId());
             preparedStatement.executeUpdate();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 }

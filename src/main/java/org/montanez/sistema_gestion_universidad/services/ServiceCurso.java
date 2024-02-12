@@ -8,7 +8,7 @@ public interface ServiceCurso {
 
     List<Curso> listar();
 
-    Curso curso_id(long id);
+    Curso curso_id(long id) throws RuntimeException;
 
     void crear(Curso curso);
 

@@ -19,10 +19,14 @@ public class ImpServiceCurso implements ServiceCurso {
     }
 
     @Override
-    public Curso curso_id(long id) {
+    public Curso curso_id(long id) throws RuntimeException {
         Curso curso = this.repositoryCurso.curso_id(id);
         if (curso == null) {
-            throw new RuntimeException("El curso no existe");
+            try {
+                throw new RuntimeException("El curso no existe");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
         }
         return curso;
     }

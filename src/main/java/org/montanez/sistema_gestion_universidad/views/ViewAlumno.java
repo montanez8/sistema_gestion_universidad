@@ -4,9 +4,10 @@ import org.montanez.sistema_gestion_universidad.exepciones.ExepcionesNullExeptio
 import org.montanez.sistema_gestion_universidad.repository.models.Alumno;
 import org.montanez.sistema_gestion_universidad.repository.models.TipoDocumento;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.function.Function;
 
 public class ViewAlumno extends ViewMain {
@@ -27,13 +28,19 @@ public class ViewAlumno extends ViewMain {
 
     private static void eliminarAlumno() throws ExepcionesNullExeption {
         System.out.println("Eliminar Alumno");
-        listarAlumnosResumido();
+        listarAlumnos();
         Alumno alumno = new Alumno();
         System.out.println("Ingrese el id del alumno");
         long id = leer.nextLong();
         if (serviceAlumno.alumno_id(id) != null) {
-            serviceAlumno.eliminar(id);
-            System.out.println("Alumno eliminado");
+            System.out.println("¿Está seguro de que desea eliminar al alumno? (s/n)");
+            String confirm = leer.next();
+            if (confirm.equalsIgnoreCase("s")) {
+                serviceAlumno.eliminar(id);
+                System.out.println("Alumno eliminado");
+            } else {
+                System.out.println("Eliminación cancelada");
+            }
         } else {
             System.out.println("Alumno no encontrado");
         }
@@ -63,24 +70,44 @@ public class ViewAlumno extends ViewMain {
         String telefono = leer.next();
 
         System.out.println("Fecha de nacimiento (dd-MM-yyyy)");
-        String fechaNacimientoStr = leer.next();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Date fechaNacimiento = null;
-        try {
-            fechaNacimiento = formatter.parse(fechaNacimientoStr);
-        } catch (ParseException e) {
-            System.out.println("Formato de fecha incorrecto");
+        LocalDate fechaNacimiento = null;
+        while (fechaNacimiento == null) {
+            String fechaNacimientoStr = leer.next();
+            try {
+                fechaNacimiento = LocalDate.parse(fechaNacimientoStr, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de fecha incorrecto, por favor intente de nuevo.");
+            }
         }
+        Date fechaNacimientoDate = Date.valueOf(fechaNacimiento);
 
         System.out.println("Genero");
-        String genero = leer.next();
+        System.out.println("1. Masculino");
+        System.out.println("2. Femenino");
+        System.out.println("3. Otro");
+        int seleccionGenero = leer.nextInt();
+        String genero = "";
+        switch (seleccionGenero) {
+            case 1:
+                genero = "M";
+                break;
+            case 2:
+                genero = "F";
+                break;
+            case 3:
+                genero = "O";
+                break;
+            default:
+                System.out.println("Opcion no valida");
+                break;
+        }
 
-        Alumno alumno = new Alumno(tipoDocumento, numeroDocumento, nombre, apellido, ciudad, direccion, telefono, fechaNacimiento, genero);
+        Alumno alumno = new Alumno(tipoDocumento, numeroDocumento, nombre, apellido, ciudad, direccion, telefono, fechaNacimientoDate, genero);
         serviceAlumno.crear(alumno);
     }
 
     private static void modificarAlumno() throws ExepcionesNullExeption {
-        listarAlumnosResumido();
+        listarAlumnos();
         System.out.println("Ingrese el ID del alumno que desea modificar:");
         long id = leer.nextLong();
         Alumno alumno = serviceAlumno.alumno_id(id);
@@ -93,14 +120,42 @@ public class ViewAlumno extends ViewMain {
             alumno.setCiudad(obtenerNuevoValor("ciudad", alumno.getCiudad(), Function.identity()));
             alumno.setDireccion(obtenerNuevoValor("direccion", alumno.getDireccion(), Function.identity()));
             alumno.setTelefono(obtenerNuevoValor("telefono", alumno.getTelefono(), Function.identity()));
-            alumno.setFechaNacimiento(obtenerNuevoValor("fecha de nacimiento(dd-MM-yyyy) ", alumno.getFechaNacimiento(), str -> {
+
+            System.out.println("Fecha de nacimiento (dd-MM-yyyy)");
+            LocalDate fechaNacimiento = null;
+            while (fechaNacimiento == null) {
+                String fechaNacimientoStr = leer.next();
                 try {
-                    return new SimpleDateFormat("dd-MM-yyyy").parse(str);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
+                    fechaNacimiento = LocalDate.parse(fechaNacimientoStr, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                } catch (DateTimeParseException e) {
+                    System.out.println("Formato de fecha incorrecto, por favor intente de nuevo.");
                 }
-            }));
-            alumno.setGenero(obtenerNuevoValor("genero", alumno.getGenero(), Function.identity()));
+            }
+            Date fechaNacimientoDate = Date.valueOf(fechaNacimiento);
+            alumno.setFechaNacimiento(fechaNacimientoDate);
+
+            System.out.println("Genero");
+            System.out.println("1. Masculino");
+            System.out.println("2. Femenino");
+            System.out.println("3. Otro");
+            int seleccionGenero = leer.nextInt();
+            String genero = "";
+            switch (seleccionGenero) {
+                case 1:
+                    genero = "M";
+                    break;
+                case 2:
+                    genero = "F";
+                    break;
+                case 3:
+                    genero = "O";
+                    break;
+                default:
+                    System.out.println("Opcion no valida");
+                    break;
+            }
+            alumno.setGenero(genero);
+
             serviceAlumno.editar(alumno);
             System.out.println("Alumno modificado exitosamente.");
         } else {
@@ -109,7 +164,7 @@ public class ViewAlumno extends ViewMain {
     }
 
     private static String obtenerNuevoValor(String campo, String valorAntiguo, Function<String, String> converter) {
-        System.out.println("Desea modificar el " + campo + "? (s/n)");
+        System.out.println("Desea modificar  " + campo + "? (s/n)");
         if (leer.nextLine().equalsIgnoreCase("s")) {
             System.out.println("Ingrese el nuevo " + campo + ":");
             return converter.apply(leer.nextLine());
@@ -118,7 +173,7 @@ public class ViewAlumno extends ViewMain {
     }
 
     private static TipoDocumento obtenerNuevoValor(String campo, TipoDocumento valorAntiguo) {
-        System.out.println("Desea modificar el " + campo + "? (s/n)");
+        System.out.println("Desea modificar " + campo + "? (s/n)");
         if (leer.nextLine().equalsIgnoreCase("s")) {
             System.out.println("Seleccione el nuevo " + campo + ":");
             int i = 1;
@@ -129,16 +184,6 @@ public class ViewAlumno extends ViewMain {
             return TipoDocumento.values()[seleccion - 1];
         }
         return valorAntiguo;
-    }
-
-    private static <T> T obtenerNuevoValor(String field, T ValorAntiguo, Function<String, T> convertir) {
-        System.out.println("Desea modificar el " + field + "? (s/n)");
-        if (leer.nextLine().equalsIgnoreCase("s")) {
-            System.out.println("Ingrese el nuevo " + field + ":");
-            return convertir.apply(leer.nextLine());
-        }
-
-        return ValorAntiguo;
     }
 
     private static void buscarAlumno() throws ExepcionesNullExeption {
@@ -155,11 +200,6 @@ public class ViewAlumno extends ViewMain {
 
     }
 
-    private static void listarAlumnosResumido() {
-        System.out.println("Listado de Alumnos:");
-        serviceAlumno.listar().forEach(alumno -> System.out.println("ID: " + alumno.getId() + ", Numero de Documento: " + alumno.getNumeroDocumento() + ", Nombre: " + alumno.getNombre()
-                + " " + alumno.getApellido()));
-    }
 
     public static int mostrarMenu() {
         System.out.println("\033[1;33m----Menu--Alumno----\033[0m");

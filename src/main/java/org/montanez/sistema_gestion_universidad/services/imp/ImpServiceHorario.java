@@ -22,7 +22,12 @@ public class ImpServiceHorario implements ServiceHorario {
     public Horario horario_id(long id) {
         Horario horario = this.repositoryHorario.horario_id(id);
         if (horario == null) {
-            throw new RuntimeException("El horario no existe");
+            try {
+                throw new RuntimeException("El horario no existe");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+
+            }
         }
         return horario;
     }

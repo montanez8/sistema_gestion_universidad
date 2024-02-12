@@ -22,7 +22,11 @@ public class ImpServiceSalon implements ServiceSalon {
     public Salon salon_id(long id) {
         Salon salon = this.repositorySalon.salon_id(id);
         if (salon == null) {
-            throw new RuntimeException("El salon no existe");
+            try {
+                throw new RuntimeException("El salon no existe");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
         }
         return salon;
     }

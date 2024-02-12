@@ -23,7 +23,12 @@ public class ImpServiceProfesor implements ServiceProfesor {
     public Profesor profesor_id(long id) {
         Profesor profesor = this.repositoryProfesor.profesor_id(id);
         if (profesor == null) {
-            throw new RuntimeException("El profesor no existe");
+            try {
+                throw new RuntimeException("El profesor no existe");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+
+            }
         }
         return profesor;
     }

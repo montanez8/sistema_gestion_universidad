@@ -14,7 +14,7 @@ public class ImpRepositoryPrograma implements RepositoryPrograma {
     private Connection connection;
 
     public ImpRepositoryPrograma() throws Exception {
-        this.connection = ConexionMsql.getInstance().getConnection();
+        this.connection = new ConexionMsql().getConnection();
     }
 
 
@@ -67,7 +67,7 @@ public class ImpRepositoryPrograma implements RepositoryPrograma {
             programa.setNombre(resultSet.getString("nombre"));
             programa.setNivel(resultSet.getString("nivel"));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
         return programa;
     }

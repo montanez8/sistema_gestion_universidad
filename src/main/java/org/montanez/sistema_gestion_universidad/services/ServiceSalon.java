@@ -7,11 +7,11 @@ import java.util.List;
 public interface ServiceSalon {
     List<Salon> listar();
 
-    Salon salon_id(long id);
-
     void crear(Salon salon);
 
     void editar(Salon salon);
 
     void eliminar(Salon salon);
+
+    Salon salon_id(long id);
 }

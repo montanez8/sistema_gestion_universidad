@@ -15,7 +15,7 @@ public class ImpRepositoryCurso implements RepositoryCurso {
     private Connection connection;
 
     public ImpRepositoryCurso() throws Exception {
-        this.connection = ConexionMsql.getInstance().getConnection();
+        this.connection = new ConexionMsql().getConnection();
     }
 
 
@@ -39,7 +39,6 @@ public class ImpRepositoryCurso implements RepositoryCurso {
     public void crear(Curso curso) {
         String sql = "INSERT INTO Curso (nombre, guiaCatedra) VALUES (?, ?)";
         DbUtilsSql.executeUpdate(connection, sql, preparedStatement -> setPreparedStatementForCurso(preparedStatement, curso));
-
     }
 
     @Override
@@ -71,7 +70,7 @@ public class ImpRepositoryCurso implements RepositoryCurso {
             preparedStatement.setString(1, curso.getNombre());
             preparedStatement.setString(2, curso.getGuiaCatedra());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 }

@@ -37,14 +37,22 @@ public abstract class Persona {
 
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
         String reset = "\u001B[0m";
         String red = "\u001B[31m";
         String green = "\u001B[32m";
+        sb.append(red + "Id: " + reset).append(id).append(" | ");
+        sb.append(red + "Tipo de documento: " + reset).append(tipoDocumento).append(" | ");
+        sb.append(red + "Numero de documento: " + reset).append(numeroDocumento).append(" | ");
+        sb.append(green + "Nombre: " + reset).append(nombre).append(" | ");
+        sb.append(green + "Apellido: " + reset).append(apellido).append(" | ");
+        sb.append(green + "Ciudad: " + reset).append(ciudad).append(" | ");
+        sb.append(green + "Direccion: " + reset).append(direccion).append(" | ");
+        sb.append(green + "Telefono: " + reset).append(telefono).append(" | ");
+        sb.append(green + "Fecha de nacimiento: " + reset).append(fechaNacimiento).append(" | ");
+        sb.append(green + "Genero: " + reset).append(genero);
 
-
-        String format = "| %-3s | %-20s | %-10s | %-15s | %-15s | %-5s | %-15s | %-15s |        %-15s%n";
-        return String.format(format, red + "ID", green + "Nombre", green + "Tipo Documento", green + "Numero Documento", green + "Fecha Nacimiento", green + "Genero", green + "Ciudad", green + "Direccion", green + "Telefono") + reset +
-                String.format(format, id, nombre + " " + apellido, tipoDocumento, numeroDocumento, fechaNacimiento, genero, ciudad, direccion, telefono, reset);
+        return sb.toString();
     }
 
 

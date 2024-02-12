@@ -17,19 +17,8 @@ public class ImpRepositoryAlumno implements RepositoryAlumno {
     private Connection connection;
 
     public ImpRepositoryAlumno() throws SQLException {
-        this.connection = ConexionMsql.getInstance().getConnection();
+        this.connection = new ConexionMsql().getConnection();
     }
-
-    public static void main(String[] args) {
-        try {
-            ImpRepositoryAlumno impRepositoryAlumno = new ImpRepositoryAlumno();
-            impRepositoryAlumno.crear(new Alumno(TipoDocumento.CEDULA, "123456789", "Juan", "Perez", "Bogota", "Calle 123", "1234567", null, "M"));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Override
     public List<Alumno> listar() {

@@ -76,8 +76,14 @@ public class ViewDepartamento extends ViewMain {
         long id = leer.nextLong();
         Departamento departamento = serviceDepartemento.buscarId(id);
         if (departamento != null) {
-            serviceDepartemento.eliminar(departamento);
-            System.out.println("Departamento eliminado");
+            System.out.println("¿Está seguro de que desea eliminar el departamento? (s/n)");
+            String confirm = leer.next();
+            if (confirm.equalsIgnoreCase("s")) {
+                serviceDepartemento.eliminar(departamento);
+                System.out.println("Departamento eliminado");
+            } else {
+                System.out.println("Eliminación cancelada");
+            }
         } else {
             System.out.println("Departamento no encontrado");
         }

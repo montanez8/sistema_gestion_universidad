@@ -16,7 +16,7 @@ public class ImpRepositoryHorario implements RepositoryHorario {
     private Connection connection;
 
     public ImpRepositoryHorario() throws Exception {
-        this.connection = ConexionMsql.getInstance().getConnection();
+        this.connection = new ConexionMsql().getConnection();
     }
 
     private static Horario createHorarioFromResultSet(ResultSet resultSet) throws SQLException {

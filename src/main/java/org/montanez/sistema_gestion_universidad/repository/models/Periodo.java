@@ -11,7 +11,7 @@ public class Periodo {
     private int anio;
     private int semestre;
 
-    public Periodo(String codigo, int anio, int semestre) {
+    public Periodo(int anio, int semestre) {
         this.codigo = codigo;
         this.anio = anio;
         this.semestre = semestre;
@@ -27,12 +27,15 @@ public class Periodo {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        sb.append("Periodo{id=").append(id);
-        sb.append(", codigo=").append(codigo);
-        sb.append(", anio=").append(anio);
-        sb.append(", semestre=").append(semestre);
-        sb.append('}');
+        String reset = "\u001B[0m";
+        String red = "\u001B[31m";
+        String green = "\u001B[32m";
+
+        sb.append(red + "id: " + reset).append(id).append(" | ");
+        sb.append(green + "codigo: " + reset).append(codigo).append(" | ");
+        sb.append(red + "anio: " + reset).append(anio).append(" | ");
+        sb.append(green + "semestre: " + reset).append(semestre);
+
         return sb.toString();
     }
 }

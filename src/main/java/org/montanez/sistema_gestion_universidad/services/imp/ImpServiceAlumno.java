@@ -20,10 +20,16 @@ public class ImpServiceAlumno implements ServiceAlumno {
     }
 
     @Override
-    public Alumno alumno_id(long id) throws ExepcionesNullExeption {
-        Alumno alumno = this.repositoryAlumno.alumno_id(id);
-        if (alumno == null) {
-            throw new ExepcionesNullExeption("El alumno no existe");
+    public Alumno alumno_id(long id) {
+        Alumno alumno = null;
+        try {
+            alumno = this.repositoryAlumno.alumno_id(id);
+            if (alumno == null) {
+                throw new ExepcionesNullExeption("El alumno no existe");
+            }
+        } catch (ExepcionesNullExeption e) {
+
+            System.err.println(e.getMessage());
         }
         return alumno;
     }

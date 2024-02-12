@@ -10,10 +10,10 @@ public class Salon {
     private int capacidad;
     private int piso;
     private String numero;
-    private String edificio;
+    private Edificio edificio;
 
 
-    public Salon(int capacidad, int piso, String numero, String edificio) {
+    public Salon(int capacidad, int piso, String numero, Edificio edificio) {
         this.capacidad = capacidad;
         this.piso = piso;
         this.numero = numero;
@@ -23,12 +23,16 @@ public class Salon {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n")
-                .append("Salon: ").append(id)
-                .append(" Capacidad: ").append(capacidad)
-                .append(" Piso: ").append(piso)
-                .append(" Numero: ").append(numero)
-                .append(" Edificio: ").append(edificio);
+        String reset = "\u001B[0m";
+        String red = "\u001B[31m";
+        String green = "\u001B[32m";
+
+
+        sb.append(red + "Salon: " + reset).append(id)
+                .append(green + " Capacidad: " + reset).append(capacidad)
+                .append(green + " Piso: " + reset).append(piso)
+                .append(green + " Numero: " + reset).append(numero)
+                .append(green + " Edificio: " + reset).append(edificio);
         return sb.toString();
     }
 }

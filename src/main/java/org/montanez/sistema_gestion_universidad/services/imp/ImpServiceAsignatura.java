@@ -22,7 +22,11 @@ public class ImpServiceAsignatura implements ServiceAsignatura {
     public Asignatura asignatura_id(long id) {
         Asignatura asignatura = this.repositoryAsignatura.asignatura_id(id);
         if (asignatura == null) {
-            throw new RuntimeException("La asignatura no existe");
+            try {
+                throw new RuntimeException("La asignatura no existe");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
         }
         return asignatura;
     }
