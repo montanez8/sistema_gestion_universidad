@@ -20,7 +20,10 @@ public class ViewMain {
     public static final ServiceEdificio serviceEdificio;
     public static final ServiceProfesor serviceProfesor;
     public static final ServiceAsignatura serviceAsignatura;
-//    public static final ServiceTarifa serviceTarifa;
+    public static final ServiceTarifa serviceTarifa;
+    public static final ServiceMatricula serviceMatricula;
+
+    public static final ServiceReportes serviceReportes;
 
 
     static {
@@ -35,7 +38,9 @@ public class ViewMain {
             serviceEdificio = new ImpServiceEdificio(new ImpRepositoryEdificio());
             serviceProfesor = new ImpServiceProfesor(new ImpRepositoryProfesor());
             serviceAsignatura = new ImpServiceAsignatura(new ImpRepositoryAsignatura());
-//            serviceTarifa = new ImpServiceTarifa(new ImpRepositoryTarifa());
+            serviceTarifa = new ImpServiceTarifa(new ImpRepositoryTarifa());
+            serviceMatricula = new ImpServiceMatricula(new ImpRepositoryMatricula());
+            serviceReportes = new ImpServiceReporte(new ImpRepositoryReportes());
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -57,14 +62,17 @@ public class ViewMain {
                 case 8 -> ViewEdificio.startMenu();
                 case 9 -> ViewProfesor.startMenu();
                 case 10 -> ViewAsignatura.startMenu();
+                case 11 -> ViewTarifa.startMenu();
+                case 12 -> ViewMatricula.startMenu();
+                case 13 -> ViewReportes.startMenu();
 
                 default -> {
-                    if (op < 1 || op > 10) {
+                    if (op < 1 || op > 13) {
                         System.out.println("Fin");
                     }
                 }
             }
-        } while (op >= 1 && op < 11);
+        } while (op >= 1 && op < 14);
     }
 
 
@@ -80,7 +88,11 @@ public class ViewMain {
         System.out.println("\033[1;32m8. Modulo de Edificio\033[0m");
         System.out.println("\033[1;32m9. Modulo de Profesor\033[0m");
         System.out.println("\033[1;32m10. Modulo de Asignatura\033[0m");
-        System.out.println("\033[1;31m11. Salir:\033[0m");
+        System.out.println("\033[1;32m11. Modulo Tarifa:\033[0m");
+        System.out.println("\033[1;32m12. Modulo Matricula:\033[0m");
+        System.out.println("\033[1;32m13. Modulo Reportes:\033[0m");
+
+        System.out.println("\033[1;31m14. Salir:\033[0m");
         return leer.nextInt();
     }
 }

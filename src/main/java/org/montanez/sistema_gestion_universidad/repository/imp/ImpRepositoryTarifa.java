@@ -1,22 +1,35 @@
 package org.montanez.sistema_gestion_universidad.repository.imp;
 
 import org.montanez.sistema_gestion_universidad.repository.RepositoryTarifa;
-import org.montanez.sistema_gestion_universidad.repository.models.Periodo;
-import org.montanez.sistema_gestion_universidad.repository.models.Programa;
 import org.montanez.sistema_gestion_universidad.repository.models.Tarifa;
 import org.montanez.sistema_gestion_universidad.utils.conexionesbd.mysql.ConexionMsql;
 import org.montanez.sistema_gestion_universidad.utils.conexionesbd.mysql.DbUtilsSql;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImpRepositoryTarifa implements RepositoryTarifa {
     private Connection connection;
+    private ImpRepositoryPeriodo repoPeriodo;
+    private ImpRepositoryPrograma repoPrograma;
+
 
     public ImpRepositoryTarifa() throws Exception {
         this.connection = new ConexionMsql().getConnection();
+        this.repoPeriodo = new ImpRepositoryPeriodo();
+        this.repoPrograma = new ImpRepositoryPrograma();
+    }
+
+    public static void main(String[] args) {
+        try {
+            ImpRepositoryTarifa impRepositoryTarifa = new ImpRepositoryTarifa();
+            System.out.println(impRepositoryTarifa.listar());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -31,21 +44,16 @@ public class ImpRepositoryTarifa implements RepositoryTarifa {
         try {
             tarifa.setId(resultSet.getLong("id"));
             tarifa.setCostoCredito(resultSet.getDouble("valorCredito"));
-
-            long programaId = resultSet.getLong("programa_id");
-            Programa programa = new ImpRepositoryPrograma().programa_id(programaId);
-            tarifa.setPrograma(programa);
-
             long periodoId = resultSet.getLong("periodo_id");
-            Periodo periodo = new ImpRepositoryPeriodo().buscarId(periodoId);
-            tarifa.setPeriodo(periodo);
-
-            return tarifa;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            long programaId = resultSet.getLong("programa_id");
+            tarifa.setPeriodo(repoPeriodo.buscarId(periodoId));
+            tarifa.setPrograma(repoPrograma.programa_id(programaId));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return tarifa;
     }
+
 
     @Override
     public Tarifa buscarId(long id) {
@@ -56,6 +64,7 @@ public class ImpRepositoryTarifa implements RepositoryTarifa {
         return tarifa[0];
     }
 
+
     @Override
     public void crear(Tarifa tarifa) {
         String sql = "INSERT INTO Tarifa (valorCredito, programa_id, periodo_id) VALUES (?, ?, ?)";
@@ -64,7 +73,6 @@ public class ImpRepositoryTarifa implements RepositoryTarifa {
             preparedStatement.setLong(2, tarifa.getPrograma().getId());
             preparedStatement.setLong(3, tarifa.getPeriodo().getId());
         });
-
     }
 
     @Override
@@ -76,8 +84,8 @@ public class ImpRepositoryTarifa implements RepositoryTarifa {
             preparedStatement.setLong(3, tarifa.getPeriodo().getId());
             preparedStatement.setLong(4, tarifa.getId());
         });
-
     }
+
 
     public void eliminar(Tarifa tarifa) {
         DbUtilsSql.executeUpdate(connection, "DELETE FROM Tarifa WHERE id = ?",

@@ -20,11 +20,21 @@ public class ConexionMsql {
         config.setJdbcUrl(URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
-        config.setMaximumPoolSize(2);
+        config.setMaximumPoolSize(1);
+        config.setConnectionTimeout(30000);
+        config.setMaxLifetime(60000);
         this.dataSource = new HikariDataSource(config);
     }
 
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
+
+    public void closeDataSource() {
+        if (this.dataSource != null) {
+            this.dataSource.close();
+        }
+    }
+
+
 }
